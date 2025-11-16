@@ -1,70 +1,206 @@
-# Getting Started with Create React App
+# MongoDB AI Agent
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A powerful AI-powered database query tool that uses Gemini 2.0 Flash to translate natural language queries into MongoDB commands.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- 🔌 Connect to any MongoDB instance
+- 🤖 Natural language to MongoDB query translation using Gemini AI
+- 📊 View generated queries and results
+- 🎨 Beautiful, modern UI with real-time feedback
+- 🔍 Support for find, aggregate, and count operations
 
-### `npm start`
+## Prerequisites
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Python 3.8+
+- Node.js 16+
+- MongoDB instance (local or remote)
+- Gemini API key
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Backend Setup
 
-### `npm test`
+1. **Navigate to backend directory and create virtual environment:**
+```bash
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+2. **Install dependencies:**
+```bash
+pip install -r requirements.txt
+```
 
-### `npm run build`
+3. **Configure environment variables:**
+```bash
+cp .env.example .env
+# Edit .env and add your Gemini API key
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+4. **Get Gemini API Key:**
+   - Visit: https://makersuite.google.com/app/apikey
+   - Create a new API key
+   - Add it to your `.env` file
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+5. **Run the Flask backend:**
+```bash
+python app.py
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+The backend will run on `http://localhost:5000`
 
-### `npm run eject`
+## Frontend Setup
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+1. **Create a new React app (if not already created):**
+```bash
+npx create-react-app mongodb-agent-frontend
+cd mongodb-agent-frontend
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+2. **Install Tailwind CSS:**
+```bash
+npm install -D tailwindcss
+npx tailwindcss init
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+3. **Configure Tailwind (tailwind.config.js):**
+```javascript
+module.exports = {
+  content: [
+    "./src/**/*.{js,jsx,ts,tsx}",
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+}
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+4. **Update src/index.css:**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
 
-## Learn More
+5. **Install lucide-react for icons:**
+```bash
+npm install lucide-react
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+6. **Replace src/App.js with the React component provided**
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+7. **Start the development server:**
+```bash
+npm start
+```
 
-### Code Splitting
+The frontend will run on `http://localhost:3000`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## Usage
 
-### Analyzing the Bundle Size
+1. **Connect to MongoDB:**
+   - Enter your MongoDB connection URL (e.g., `mongodb://localhost:27017/`)
+   - Click "Connect to MongoDB"
+   - View the database schema
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+2. **Query your database:**
+   - Enter a natural language query (e.g., "Give me top 5 most selling products today")
+   - Click "Execute Query"
+   - View the generated MongoDB query
+   - See the results
 
-### Making a Progressive Web App
+## Example Queries
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- "Give me top 5 most selling products today"
+- "Show all users who registered last week"
+- "Count total orders with status completed"
+- "Find products with price greater than 100"
+- "List all customers from New York"
 
-### Advanced Configuration
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+```
+mongodb-ai-agent/
+├── backend/
+│   ├── app.py              # Flask application
+│   ├── requirements.txt    # Python dependencies
+│   └── .env               # Environment variables
+├── frontend/
+│   ├── src/
+│   │   ├── App.js         # React component
+│   │   └── index.css      # Tailwind styles
+│   └── package.json       # Node dependencies
+└── README.md
+```
 
-### Deployment
+## API Endpoints
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### POST /api/connect
+Connect to MongoDB and retrieve schema
+```json
+{
+  "connection_url": "mongodb://localhost:27017/"
+}
+```
 
-### `npm run build` fails to minify
+### POST /api/query
+Execute natural language query
+```json
+{
+  "connection_id": "connection_id_here",
+  "prompt": "Give me top 5 most selling products"
+}
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### POST /api/disconnect
+Disconnect from MongoDB
+```json
+{
+  "connection_id": "connection_id_here"
+}
+```
+
+## Troubleshooting
+
+**Backend won't start:**
+- Ensure all dependencies are installed
+- Check if port 5000 is available
+- Verify Gemini API key is set
+
+**Cannot connect to MongoDB:**
+- Verify MongoDB is running
+- Check connection URL format
+- Ensure network access to MongoDB instance
+
+**CORS errors:**
+- Ensure Flask-CORS is installed
+- Verify backend is running on port 5000
+
+**Gemini API errors:**
+- Verify API key is valid
+- Check API quota limits
+- Ensure internet connection
+
+## Security Notes
+
+⚠️ **Important:**
+- Never commit your `.env` file
+- Use environment variables for sensitive data
+- Implement authentication for production use
+- Validate and sanitize all user inputs
+- Use secure MongoDB connections (SSL/TLS)
+
+## Technologies Used
+
+- **Backend:** Flask, PyMongo, Google Gemini AI
+- **Frontend:** React, Tailwind CSS, Lucide Icons
+- **Database:** MongoDB
+- **AI:** Gemini 2.0 Flash
+
+## License
+
+MIT License
+
+## Contributing
+
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
